@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Advent of Code | Day 3</title>
+  </head>
+  <body>
+    <input type="file" id="input" />
+    <script>
+      let input = document.getElementById("input");
+
+      input.addEventListener("change", () => {
+        let files = input.files;
+
+        if (files.length == 0) return;
+
+        const file = files[0];
+
+        let reader = new FileReader();
+
+        reader.onload = (e) => {
+          const file = e.target.result;
+          const lines = file.split(/\r\n|\n/);
+
+          let prioritySum = 0;
+
+          // fails if there's a newline in the file
+          function getCharCode(char) {
+            let alphabet = [...Array(26)].map((_, i) =>
+              String.fromCharCode(i + 97),
+            );
+            if (char === char.toUpperCase()) {
+              return alphabet.indexOf(char.toLowerCase()) + 1 + 26;
+            } else {
+              return alphabet.indexOf(char) + 1;
+            }
+          }
+
+          lines.forEach((text) => {
+            let pocket1 = [""];
+            let pocket2 = [""];
+            for (let i = 0; i < Math.floor(text.length / 2); i++) {
+              pocket1.push(text[i]);
+            }
+            for (let i = Math.floor(text.length / 2); i < text.length; i++) {
+              pocket2.push(text[i]);
+            }
+
+            let common = [""];
+
+            pocket1.forEach((i) => {
+              pocket2.forEach((j) => {
+                if (i === j) {
+                  common.push(i);
+                }
+              });
+            });
+
+            let commonChar = common.filter((x) => x)[0];
+
+            prioritySum += getCharCode(commonChar);
+          });
+
+          let groupSum = 0;
+
+          let groupChar = "";
+
+          // copied from Geeks for Geeks
+          const intersection = (arr1, arr2) => {
+            const res = [];
+            for (let i = 0; i < arr1.length; i++) {
+              if (!arr2.includes(arr1[i])) {
+                continue;
+              }
+              res.push(arr1[i]);
+            }
+            return res;
+          };
+          const intersectMany = (...arrs) => {
+            let res = arrs[0].slice();
+            for (let i = 1; i < arrs.length; i++) {
+              res = intersection(res, arrs[i]);
+            }
+            return res;
+          };
+
+          for (i = 0; i < 300; i += 3) {
+            let commonChar = Array.from(
+              new Set(intersectMany(lines[i], lines[i + 1], lines[i + 2])),
+            )[0];
+
+            groupSum += getCharCode(commonChar);
+          }
+          console.log(`Part 1: ${prioritySum}\nPart 2: ${groupSum}`);
+        };
+
+        reader.onerror = (e) => alert(e.target.error.name);
+
+        reader.readAsText(file);
+      });
+    </script>
+  </body>
+</html>
