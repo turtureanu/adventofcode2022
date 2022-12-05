@@ -1,6 +1,5 @@
 #include <bits/stdc++.h>
 #include <fstream>
-#include <functional>
 #include <iostream>
 #include <string>
 #include <vector>
@@ -26,13 +25,13 @@ int main() {
 
   sort(caloriesPerElf.begin(), caloriesPerElf.end(), greater<int>());
 
-  cout << "\nMost calories: " << caloriesPerElf[0];
-  cout << "\n\nTop three most calories: ";
+  cout << "\nPart 1: " << caloriesPerElf[0];
+  cout << "\n\nPart 2: ";
   sum = 0;
   for (int i = 0; i < 3; i++) {
     sum += caloriesPerElf[i];
   }
 
-  cout << "\nTotal of top three: " << sum << "\n\n";
+  cout << sum << "\n\n";
   return 0;
 }
